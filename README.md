@@ -39,4 +39,4 @@ A seguir, os principais cenários:
    - Objetivo: reforçar validação de entrada com valores inválidos.
 
 ### Resultado
-Todos os testes unitários foram implementados e estão em **estado GREEN**, comprovando a correta aplicação da metodologia **TDD (Test-Driven Development)**.  
+Todos os testes unitários foram implementados e estão em **estado GREEN**, comprovando a correta aplicação da metodologia **TDD (Test-Driven Development)**. 
