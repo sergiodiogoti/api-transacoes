@@ -37,6 +37,3 @@ A seguir, os principais cenários:
 
 5. **"Não deve permitir transação com valor negativo"**
    - Objetivo: reforçar validação de entrada com valores inválidos.
-
-### Resultado
-Todos os testes unitários foram implementados e estão em **estado GREEN**, comprovando a correta aplicação da metodologia **TDD (Test-Driven Development)**. 
