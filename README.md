@@ -1,25 +1,42 @@
-## Nova Funcionalidade: Transação
+### Funcionalidade Escolhida
+Foi adicionada a funcionalidade de **Transações Financeiras**, permitindo o registro de **receitas, despesas e transferências** no sistema de Gestão Financeira Pessoal.  
+Essa funcionalidade se integra ao domínio existente, vinculando transações às **Contas** já cadastradas.
 
-### Por que escolhi essa funcionalidade?
-A gestão financeira pessoal só faz sentido se o sistema permitir registrar receitas e despesas. 
-Assim, implementei um módulo de **Transações**, que se integra com as **Contas** já existentes.
+### Integração com o Projeto
+- Cada transação está associada a uma **Conta** existente.
+- As transações alteram o **saldo da conta** conforme o tipo:
+   - Receita aumenta o saldo.
+   - Despesa diminui o saldo, respeitando a regra de saldo suficiente.
+   - Transferência movimenta valores entre contas de origem e destino.
 
-### Principais classes criadas
-- **Transacao (modelo)**: representa uma movimentação financeira (receita, despesa, transferência).
-- **TransacaoService (serviço)**: contém as regras de negócio, como atualizar saldo das contas e validar operações.
+### Principais Classes Implementadas
+- **`Transacao`** (nova entidade)  
+  Representa a movimentação financeira (id, valor, tipo, descrição, data, conta).
+- **`TipoTransacao`** (enum)  
+  Define os tipos possíveis de transação: `RECEITA`, `DESPESA`, `TRANSFERENCIA`.
+- **`TransacaoService`** (classe de serviço)  
+  Contém a lógica de negócio para validar e aplicar os efeitos das transações sobre as contas.
 
-### Cenários de Teste (TDD)
-1. **[DisplayName: "Deve registrar uma receita e aumentar o saldo da conta"]**  
-   - Verifica se, ao registrar uma transação do tipo RECEITA, o saldo da conta é atualizado corretamente.  
+### Cenários de Teste Unitário
+Foram criados testes unitários com JUnit 5, aplicando o ciclo **Red → Green → Refactor**.  
+A seguir, os principais cenários:
 
-2. **[DisplayName: "Deve registrar uma despesa e diminuir o saldo da conta"]**  
-   - Valida que uma transação de DESPESA reduz o saldo.  
+1. **"Deve registrar uma receita e aumentar o saldo da conta"**
+   - Objetivo: validar que receitas somam ao saldo existente.
+   - Red → Teste criado antes do método, falhando até implementação mínima.
 
-3. **[DisplayName: "Não deve permitir despesa maior que o saldo da conta"]**  
-   - Garante que o sistema lança `SaldoInsuficienteException` caso o valor da despesa seja maior que o saldo disponível.  
+2. **"Deve registrar uma despesa e diminuir o saldo da conta"**
+   - Objetivo: validar que despesas reduzem o saldo corretamente.
 
-4. **[DisplayName: "Não deve aceitar transação com valor negativo"]**  
-   - Verifica que o sistema lança exceção para valores inválidos.  
+3. **"Não deve permitir despesa maior que o saldo da conta"**
+   - Objetivo: garantir regra de negócio de saldo insuficiente.
+   - Utiliza `assertThrows` para validar a exceção.
 
-5. **[DisplayName: "Deve transferir valores entre contas corretamente"]**  
-   - Verifica que uma TRANSFERÊNCIA diminui o saldo da conta de origem e aumenta o saldo da conta destino.  
+4. **"Deve transferir valores entre duas contas corretamente"**
+   - Objetivo: validar movimentação simultânea em conta origem e destino.
+
+5. **"Não deve permitir transação com valor negativo"**
+   - Objetivo: reforçar validação de entrada com valores inválidos.
+
+### Resultado
+Todos os testes unitários foram implementados e estão em **estado GREEN**, comprovando a correta aplicação da metodologia **TDD (Test-Driven Development)**.  
