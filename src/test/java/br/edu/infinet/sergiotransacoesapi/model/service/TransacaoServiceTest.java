@@ -1,4 +1,4 @@
-package br.edu.infinet.sergiotransacoesapi;
+package br.edu.infinet.sergiotransacoesapi.model.service;
 
 import br.edu.infinet.sergiotransacoesapi.model.domain.Conta;
 import br.edu.infinet.sergiotransacoesapi.model.domain.Transacao;
