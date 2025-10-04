@@ -1,39 +1,40 @@
-### Funcionalidade Escolhida
-Foi adicionada a funcionalidade de **Transações Financeiras**, permitindo o registro de **receitas, despesas e transferências** no sistema de Gestão Financeira Pessoal.  
-Essa funcionalidade se integra ao domínio existente, vinculando transações às **Contas** já cadastradas.
+## 🔗 Demonstração da Integração entre Microsserviços
 
-### Integração com o Projeto
-- Cada transação está associada a uma **Conta** existente.
-- As transações alteram o **saldo da conta** conforme o tipo:
-   - Receita aumenta o saldo.
-   - Despesa diminui o saldo, respeitando a regra de saldo suficiente.
-   - Transferência movimenta valores entre contas de origem e destino.
+Esta Feature demonstra a **interoperabilidade entre sistemas**:
+- O **Microserviço de Transacao (Feature 2)** fornece dados de conversão de moedas em tempo real.
+- O **Projeto de Gestão Financeira (disciplina anterior)** consome esses dados via **Spring Cloud OpenFeign** e os utiliza como parte de suas funcionalidades.
 
-### Principais Classes Implementadas
-- **`Transacao`** (nova entidade)  
-  Representa a movimentação financeira (id, valor, tipo, descrição, data, conta).
-- **`TipoTransacao`** (enum)  
-  Define os tipos possíveis de transação: `RECEITA`, `DESPESA`, `TRANSFERENCIA`.
-- **`TransacaoService`** (classe de serviço)  
-  Contém a lógica de negócio para validar e aplicar os efeitos das transações sobre as contas.
+📂 **Repositório do Projeto da Disciplina Anterior (consumidor):**  
+👉 [https://github.com/sergiodiogoti/api-gestao-financeira](https://github.com/sergiodiogoti/api-gestao-financeira)
 
-### Cenários de Teste Unitário
-Foram criados testes unitários com JUnit 5, aplicando o ciclo **Red → Green → Refactor**.  
-A seguir, os principais cenários:
+---
 
-1. **"Deve registrar uma receita e aumentar o saldo da conta"**
-   - Objetivo: validar que receitas somam ao saldo existente.
-   - Red → Teste criado antes do método, falhando até implementação mínima.
+### ⚙️ Passo a passo para execução
 
-2. **"Deve registrar uma despesa e diminuir o saldo da conta"**
-   - Objetivo: validar que despesas reduzem o saldo corretamente.
+1. **Suba o microserviço de transacao onde contém o endpoint que será consumido pelo outro serviço:**
+   ```bash
+   mvn spring-boot:run
 
-3. **"Não deve permitir despesa maior que o saldo da conta"**
-   - Objetivo: garantir regra de negócio de saldo insuficiente.
-   - Utiliza `assertThrows` para validar a exceção.
+- Ao rodar a aplicação é possivel observar o log que demostra que foi criado um loader para logar as conversões de moeda de reais para USD e EURO
+  ![cambio](docs/log-cambio-conversao-moedas.png)
 
-4. **"Deve transferir valores entre duas contas corretamente"**
-   - Objetivo: validar movimentação simultânea em conta origem e destino.
+- Porta padrão: 8080
+- Endpoint principal:
+GET http://localhost:8080/api/cambio/conversor-moedas/{saldo}
+  ![cambio](docs/print-api-transacoes-cambio-serviço-novo.png)
 
-5. **"Não deve permitir transação com valor negativo"**
-   - Objetivo: reforçar validação de entrada com valores inválidos.
+2. **Suba o projeto de Gestão Financeira (disciplina anterior):**
+   ```bash
+   mvn spring-boot:run
+- Porta definida: 8081
+
+- Endpoint de consumo:
+  GET http://localhost:8081/api/transacoes/cambio/conversor-moedas/{saldo}
+  ![cambio](docs/print-api-gestao-financeira-serviço-anterior.png)
+
+3. **Teste a comunicação:**
+- Primeiro, chame o microserviço de transaçoes diretamente (8080).
+- Depois, chame o projeto de gestão (8081) e veja que ele retorna as mesmas informações, mas agora integradas ao seu domínio.
+
+4. **Ilustração do Fluxo:**
+ ![cambio](docs/ilustracao_fluxo.png)
