@@ -12,8 +12,20 @@ public class TransacaoService {
 
         switch (transacao.getTipo()) {
             case RECEITA -> conta.setSaldo(conta.getSaldo() + transacao.getValor());
-            default -> throw new UnsupportedOperationException("Lógica não implementada.");
+            case DESPESA -> registrarDespesa(conta, transacao);
+            default -> throw new UnsupportedOperationException("Use o método transferir para transações de transferência");
         }
+    }
+
+    public void transferir(Conta origem, Conta destino, Transacao transacao) {
+        throw new UnsupportedOperationException("Funcionalidade de transferência não implementada.");
+    }
+
+    private void registrarDespesa(Conta conta, Transacao transacao) {
+        if (conta.getSaldo() < transacao.getValor()) {
+            throw new IllegalArgumentException("Saldo insuficiente");
+        }
+        conta.setSaldo(conta.getSaldo() - transacao.getValor());
     }
 
     private void validarValor(Transacao transacao) {
