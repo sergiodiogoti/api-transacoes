@@ -1,5 +1,6 @@
 package br.edu.infinet.sergiotransacoesapi.controller.exception;
 
+import br.edu.infinet.sergiotransacoesapi.model.domain.exceptions.ExternalServiceException;
 import br.edu.infinet.sergiotransacoesapi.model.domain.exceptions.ResourceInvalidException;
 import br.edu.infinet.sergiotransacoesapi.model.domain.exceptions.ResourceNotFoundException;
 import br.edu.infinet.sergiotransacoesapi.model.domain.exceptions.response.ApiResponseError;
@@ -39,6 +40,14 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<Object> handleResourceInvalidException(ResourceInvalidException ex, HttpServletRequest request) {
         var apiErro = new ApiResponseError(HttpStatus.BAD_REQUEST, request.getRequestURI());
         apiErro.setError(ConstanteUtil.ERRO_REQUISICAO_INVALIDA);
+        apiErro.setMessage(ex.getMessage());
+        return buildResponseEntity(apiErro);
+    }
+
+    @ExceptionHandler(ExternalServiceException.class)
+    protected ResponseEntity<Object> handleExternalServiceException(ExternalServiceException ex, HttpServletRequest request) {
+        var apiErro = new ApiResponseError(ex.getStatus(), request.getRequestURI());
+        apiErro.setError(ex.getStatus().toString());
         apiErro.setMessage(ex.getMessage());
         return buildResponseEntity(apiErro);
     }

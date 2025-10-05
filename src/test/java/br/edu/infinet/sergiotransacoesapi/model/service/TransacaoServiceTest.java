@@ -3,11 +3,11 @@ package br.edu.infinet.sergiotransacoesapi.model.service;
 import br.edu.infinet.sergiotransacoesapi.model.domain.Conta;
 import br.edu.infinet.sergiotransacoesapi.model.domain.Transacao;
 import br.edu.infinet.sergiotransacoesapi.model.domain.enums.TipoTransacao;
-import br.edu.infinet.sergiotransacoesapi.model.service.TransacaoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TransacaoServiceTest {
 
@@ -28,6 +28,22 @@ class TransacaoServiceTest {
     }
 
     @Test
+    @DisplayName("Não deve permitir transação com valor negativo")
+    void naoDevePermitirValorNegativo() {
+        Conta conta = new Conta();
+        conta.setSaldo(100.0);
+
+        Transacao receita = new Transacao();
+        receita.setValor(-50.0);
+        receita.setTipo(TipoTransacao.RECEITA);
+
+        TransacaoService service = new TransacaoService();
+
+        assertThrows(IllegalArgumentException.class,
+                () -> service.registrarTransacao(conta, receita));
+    }
+
+    @Test
     @DisplayName("Deve registrar uma despesa e diminuir o saldo da conta")
     void deveRegistrarDespesaEDiminuirSaldo() {
         Conta conta = new Conta();
@@ -39,6 +55,7 @@ class TransacaoServiceTest {
 
         TransacaoService service = new TransacaoService();
         service.registrarTransacao(conta, despesa);
+
 
         assertEquals(120.0, conta.getSaldo());
     }
@@ -57,6 +74,7 @@ class TransacaoServiceTest {
 
         assertThrows(IllegalArgumentException.class,
                 () -> service.registrarTransacao(conta, despesa));
+
     }
 
     @Test
@@ -77,21 +95,5 @@ class TransacaoServiceTest {
 
         assertEquals(150.0, origem.getSaldo());
         assertEquals(250.0, destino.getSaldo());
-    }
-
-    @Test
-    @DisplayName("Não deve permitir transação com valor negativo")
-    void naoDevePermitirValorNegativo() {
-        Conta conta = new Conta();
-        conta.setSaldo(100.0);
-
-        Transacao receita = new Transacao();
-        receita.setValor(-50.0);
-        receita.setTipo(TipoTransacao.RECEITA);
-
-        TransacaoService service = new TransacaoService();
-
-        assertThrows(IllegalArgumentException.class,
-                () -> service.registrarTransacao(conta, receita));
     }
 }
