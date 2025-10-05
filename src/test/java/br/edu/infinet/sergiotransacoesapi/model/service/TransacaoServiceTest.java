@@ -34,12 +34,11 @@ class TransacaoServiceTest {
         conta.setSaldo(100.0);
 
         Transacao receita = new Transacao();
-        receita.setValor(-50.0); // Valor inválido
+        receita.setValor(-50.0);
         receita.setTipo(TipoTransacao.RECEITA);
 
         TransacaoService service = new TransacaoService();
 
-        // Espera-se que lance IllegalArgumentException
         assertThrows(IllegalArgumentException.class,
                 () -> service.registrarTransacao(conta, receita));
     }
@@ -57,7 +56,7 @@ class TransacaoServiceTest {
             TransacaoService service = new TransacaoService();
             service.registrarTransacao(conta, despesa);
 
-            // O teste espera que o saldo seja 120.0
+
             assertEquals(120.0, conta.getSaldo());
         }
 
@@ -68,14 +67,33 @@ class TransacaoServiceTest {
             conta.setSaldo(100.0);
 
             Transacao despesa = new Transacao();
-            despesa.setValor(200.0); // Valor maior que o saldo
+            despesa.setValor(200.0);
             despesa.setTipo(TipoTransacao.DESPESA);
 
             TransacaoService service = new TransacaoService();
 
-            // Espera-se que lance IllegalArgumentException
             assertThrows(IllegalArgumentException.class,
                     () -> service.registrarTransacao(conta, despesa));
 
         }
+
+    @Test
+    @DisplayName("Deve transferir valores entre duas contas corretamente")
+    void deveTransferirEntreContas() {
+        Conta origem = new Conta();
+        origem.setSaldo(300.0);
+
+        Conta destino = new Conta();
+        destino.setSaldo(100.0);
+
+        Transacao transferencia = new Transacao();
+        transferencia.setValor(150.0);
+        transferencia.setTipo(TipoTransacao.TRANSFERENCIA);
+
+        TransacaoService service = new TransacaoService();
+        service.transferir(origem, destino, transferencia);
+
+        assertEquals(150.0, origem.getSaldo());
+        assertEquals(250.0, destino.getSaldo());
+    }
 }
