@@ -43,4 +43,39 @@ class TransacaoServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> service.registrarTransacao(conta, receita));
     }
+
+        @Test
+        @DisplayName("Deve registrar uma despesa e diminuir o saldo da conta")
+        void deveRegistrarDespesaEDiminuirSaldo() {
+            Conta conta = new Conta();
+            conta.setSaldo(200.0);
+
+            Transacao despesa = new Transacao();
+            despesa.setValor(80.0);
+            despesa.setTipo(TipoTransacao.DESPESA);
+
+            TransacaoService service = new TransacaoService();
+            service.registrarTransacao(conta, despesa);
+
+            // O teste espera que o saldo seja 120.0
+            assertEquals(120.0, conta.getSaldo());
+        }
+
+        @Test
+        @DisplayName("Não deve permitir despesa maior que o saldo da conta")
+        void naoDevePermitirDespesaMaiorQueSaldo() {
+            Conta conta = new Conta();
+            conta.setSaldo(100.0);
+
+            Transacao despesa = new Transacao();
+            despesa.setValor(200.0); // Valor maior que o saldo
+            despesa.setTipo(TipoTransacao.DESPESA);
+
+            TransacaoService service = new TransacaoService();
+
+            // Espera-se que lance IllegalArgumentException
+            assertThrows(IllegalArgumentException.class,
+                    () -> service.registrarTransacao(conta, despesa));
+
+        }
 }
