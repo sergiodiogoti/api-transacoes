@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TransacaoServiceTest {
 
@@ -14,18 +15,32 @@ class TransacaoServiceTest {
     @DisplayName("Deve registrar uma receita e aumentar o saldo da conta")
     void deveRegistrarReceitaEAumentarSaldo() {
         Conta conta = new Conta();
-        // Assumindo que Conta já possui o método setSaldo
         conta.setSaldo(100.0);
 
         Transacao receita = new Transacao();
-        // Assumindo que Transacao já possui os métodos setValor e setTipo
         receita.setValor(50.0);
         receita.setTipo(TipoTransacao.RECEITA);
 
         TransacaoService service = new TransacaoService();
         service.registrarTransacao(conta, receita);
 
-        // O teste espera que o saldo seja 150.0
         assertEquals(150.0, conta.getSaldo());
+    }
+
+    @Test
+    @DisplayName("Não deve permitir transação com valor negativo")
+    void naoDevePermitirValorNegativo() {
+        Conta conta = new Conta();
+        conta.setSaldo(100.0);
+
+        Transacao receita = new Transacao();
+        receita.setValor(-50.0); // Valor inválido
+        receita.setTipo(TipoTransacao.RECEITA);
+
+        TransacaoService service = new TransacaoService();
+
+        // Espera-se que lance IllegalArgumentException
+        assertThrows(IllegalArgumentException.class,
+                () -> service.registrarTransacao(conta, receita));
     }
 }
