@@ -18,7 +18,14 @@ public class TransacaoService {
     }
 
     public void transferir(Conta origem, Conta destino, Transacao transacao) {
-        throw new UnsupportedOperationException("Funcionalidade de transferência não implementada.");
+        validarValor(transacao);
+
+        if (origem.getSaldo() < transacao.getValor()) {
+            throw new IllegalArgumentException("Saldo insuficiente para transferência");
+        }
+
+        origem.setSaldo(origem.getSaldo() - transacao.getValor());
+        destino.setSaldo(destino.getSaldo() + transacao.getValor());
     }
 
     private void registrarDespesa(Conta conta, Transacao transacao) {
