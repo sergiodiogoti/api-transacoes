@@ -69,14 +69,14 @@ Implementa a regra de negócio para **transferência de valores entre duas conta
 
 ## 🧪 Estrutura de Testes
 
-Os testes unitários seguem a convenção `*Test.java`, com cobertura de 95%+ sobre a lógica de negócio.  
+  
 Cada regra foi validada isoladamente antes de ser integrada ao código principal.
 
 ---
 
 ## 📊 Histórico de Desenvolvimento
 
-Para comprovar o processo de TDD, utilize o comando:
+Para comprovar o processo de TDD, va até a branch main e utilize o comando:
 
 ```bash
 git log --oneline
