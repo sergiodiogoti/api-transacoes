@@ -73,4 +73,3 @@ public class CambioService {
                 .orElseThrow(() -> new ResourceInvalidException(ConstanteUtil.ERRO_PARSE_COTACAO + moeda));
     }
 }
-

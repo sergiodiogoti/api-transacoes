@@ -69,7 +69,7 @@ Implementa a regra de negócio para **transferência de valores entre duas conta
 
 ## 🧪 Estrutura de Testes
 
-  
+
 Cada regra foi validada isoladamente antes de ser integrada ao código principal.
 
 ---
@@ -107,10 +107,10 @@ git log --oneline
 
 - Porta padrão: 8080
 - Endpoint principal:
-GET http://localhost:8080/api/cambio/conversor-moedas/{saldo}
- 
+  GET http://localhost:8080/api/cambio/conversor-moedas/{saldo}
+
 - Ao chamar o endpoint acima é feito uma requisição atraves do FeignClient para uma api-externa:
-GET https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL
+  GET https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL
 
 - Exemplo de resposta:
 ```json
@@ -161,4 +161,4 @@ Apos a resposta da awesomeapi, o serviço de transacoes cria uma regra de negoci
 - Depois, chame o projeto de gestão (8081) e veja que ele retorna as mesmas informações, mas agora integradas ao seu domínio.
 
 4. **Ilustração do Fluxo:**
- ![cambio](docs/ilustracao_fluxo.png)
+   ![cambio](docs/ilustracao_fluxo.png)

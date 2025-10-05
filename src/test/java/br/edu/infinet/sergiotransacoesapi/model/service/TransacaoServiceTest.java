@@ -43,39 +43,39 @@ class TransacaoServiceTest {
                 () -> service.registrarTransacao(conta, receita));
     }
 
-        @Test
-        @DisplayName("Deve registrar uma despesa e diminuir o saldo da conta")
-        void deveRegistrarDespesaEDiminuirSaldo() {
-            Conta conta = new Conta();
-            conta.setSaldo(200.0);
+    @Test
+    @DisplayName("Deve registrar uma despesa e diminuir o saldo da conta")
+    void deveRegistrarDespesaEDiminuirSaldo() {
+        Conta conta = new Conta();
+        conta.setSaldo(200.0);
 
-            Transacao despesa = new Transacao();
-            despesa.setValor(80.0);
-            despesa.setTipo(TipoTransacao.DESPESA);
+        Transacao despesa = new Transacao();
+        despesa.setValor(80.0);
+        despesa.setTipo(TipoTransacao.DESPESA);
 
-            TransacaoService service = new TransacaoService();
-            service.registrarTransacao(conta, despesa);
+        TransacaoService service = new TransacaoService();
+        service.registrarTransacao(conta, despesa);
 
 
-            assertEquals(120.0, conta.getSaldo());
-        }
+        assertEquals(120.0, conta.getSaldo());
+    }
 
-        @Test
-        @DisplayName("Não deve permitir despesa maior que o saldo da conta")
-        void naoDevePermitirDespesaMaiorQueSaldo() {
-            Conta conta = new Conta();
-            conta.setSaldo(100.0);
+    @Test
+    @DisplayName("Não deve permitir despesa maior que o saldo da conta")
+    void naoDevePermitirDespesaMaiorQueSaldo() {
+        Conta conta = new Conta();
+        conta.setSaldo(100.0);
 
-            Transacao despesa = new Transacao();
-            despesa.setValor(200.0);
-            despesa.setTipo(TipoTransacao.DESPESA);
+        Transacao despesa = new Transacao();
+        despesa.setValor(200.0);
+        despesa.setTipo(TipoTransacao.DESPESA);
 
-            TransacaoService service = new TransacaoService();
+        TransacaoService service = new TransacaoService();
 
-            assertThrows(IllegalArgumentException.class,
-                    () -> service.registrarTransacao(conta, despesa));
+        assertThrows(IllegalArgumentException.class,
+                () -> service.registrarTransacao(conta, despesa));
 
-        }
+    }
 
     @Test
     @DisplayName("Deve transferir valores entre duas contas corretamente")

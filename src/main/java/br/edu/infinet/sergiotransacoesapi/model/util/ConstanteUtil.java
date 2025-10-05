@@ -15,7 +15,4 @@ public class ConstanteUtil {
     public final static String EURO = "EUR";
     public final static String USD= "USD";
 
-
-
-
 }
