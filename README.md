@@ -1,78 +1,101 @@
-# Feature 3: Modularização e Design de APIs com DTOs
+# 🧩 Feature 4: Autenticação e Autorização com Spring Security
 
-## Descrição da Feature
-Esta feature demonstra a aplicação de conceitos de **arquitetura multi-módulos** e o uso estratégico de **Data Transfer Objects (DTOs)** em uma aplicação Spring Boot. O objetivo é estruturar a aplicação de forma modular, proteger os modelos de domínio e projetar APIs flexíveis e orientadas ao cliente.
-
-A aplicação foi dividida em três módulos principais:
-
-1. **common-domain**
-2. **external-api-client**
-3. **main-application**
+Este documento detalha a implementação da **segurança na API RESTful**, utilizando o **Spring Security** para aplicar os pilares de **autenticação e autorização**, seguindo os princípios de **Menor Privilégio** e **Segurança por Padrão**.
 
 ---
 
-## Estrutura de Módulos
+## 1. ⚙️ Configuração e Escolhas Técnicas
 
-### 1. `common-domain`
-- Contém as entidades de domínio e enums compartilhados entre módulos.
-- Objetivo: fornecer um "vocabulário comum" do sistema.
-- Exemplo de classes:
-    - `model/Usuario`
-    - `model/Conta`
-    - `enums/TipoConta`
-    - `enums/Instituicao`
-
-### 2. `external-api-client`
-- Responsável pela comunicação com APIs externas.
-- Contém **Feign Clients** service e DTOs específicos das respostas externas.
-- Exemplo:
-    - `client/CambioClient` → consulta saldo em USD e EUR
-    - `dto/CambioApiResponseDTO` → DTO com cotações de moedas externas
-    - `dto/CambioQueryResultDTO` → DTO que retorna o resultado da conversão de moedas
-    - `dto/CotacaoDTO` → DTO com cotações de moedas externas
-    - `service/CambioService` → Regra de negocio para converter o saldo em USD e EUR 
-
-### 3. `main-application`
-- Contém a lógica de negócio principal, repositórios e controladores REST.
-- Contém DTOs de **Request** e **Response** da própria API.
-- Mapeamento:
-    - `RequestDTO` → Entidade (`Usuario`, `Conta`)
-    - Entidade → `ResponseDTO` → Cliente
-- Loaders de dados de teste:
-    - `UsuarioLoader` → carrega usuários do arquivo `usuario.txt`
-    - `ContaLoader` → carrega contas do arquivo `conta.txt` e enriquece saldo via API externa
+| Item | Implementação | Justificativa |
+|------|----------------|----------------|
+| **Autenticação** | **HTTP Basic** | Escolhido conforme requisito da feature. É simples e eficaz para aplicações RESTful *stateless* (sem sessões). |
+| **Autorização** | **Baseada em Roles (`ADMIN`, `USER`) via URL/Request Matching** | Controle centralizado na classe `SecurityConfig`, garantindo separação de responsabilidades e evitando lógica de permissão nos Controllers. |
+| **Usuários** | **Gerenciamento em memória (InMemoryUserDetailsManager)** | Implementação rápida para validação de conceitos. As senhas são codificadas com `BCryptPasswordEncoder`, garantindo segurança mínima adequada. |
+| **Princípios** | **Menor Privilégio e Segurança por Padrão** | O usuário `USER` possui apenas permissão de leitura (GET), enquanto `ADMIN` possui permissão total. A regra final `anyRequest().authenticated()` garante que todas as rotas exigem autenticação. |
 
 ---
 
-## DTOs
+## 2. 🔒 Regras de Autorização Aplicadas
 
-### DTOs de Request
-- Usados para receber dados das requisições HTTP (`POST`, `PUT`)
-- Contêm validações de entrada (`@NotBlank`, `@Email`, etc.)
-- Exemplo: `UsuarioRequestDTO`, `ContaRequestDTO`
+As regras foram configuradas para segregar permissões, garantindo que o **ADMIN** possa gerenciar recursos e o **USER** apenas consultá-los.
 
-### DTOs de Response
-- Usados para enviar dados de volta ao cliente (`GET`, `POST`, `PUT`)
-- Expondo apenas dados relevantes, incluindo informações enriquecidas por APIs externas
-- Exemplo: `UsuarioResponseDTO`, `ContaResponseDTO` (com saldo convertido em USD e EUR)
+| Contexto | Método | Permissão | Requisito Atendido |
+|-----------|----------|-------------|----------------------|
+| `/api/usuarios/**` | `GET` | `ADMIN` ou `USER` | Leitura (consulta) permitida a todos os usuários autenticados. |
+| `/api/usuarios/**` | `POST`, `PUT`, `DELETE` | Apenas `ADMIN` | Criação, alteração e exclusão restritas a administradores. |
+| `/api/contas/**` | `GET` | `ADMIN` ou `USER` | Consulta de contas liberada a todos os usuários autenticados. |
+| `/api/contas/**` | `POST`, `PUT`, `DELETE` | Apenas `ADMIN` | Operações de modificação/exclusão restritas a administradores. |
+| `*` (todas as demais) | Qualquer método | Autenticação obrigatória | Implementa a **Segurança por Padrão**, protegendo todo o sistema. |
 
 ---
 
-## Loaders
-- Implementados usando `ApplicationRunner` e anotação `@Component` com `@Order`.
-- Função:
-    - Ler arquivos de teste (`usuario.txt`, `conta.txt`)
-    - Criar entidades de domínio
-    - Chamar o **Service** para persistir e gerar ResponseDTO
-Service.incluir(genericMapper.map(usuarioRequestDTO, Usuario.class));
+## 3. 🧪 Evidências dos Testes (Validação da Segurança)
+
+Abaixo estão os principais **cenários de teste realizados via Postman e cURL**, que comprovam a correta aplicação da autenticação e autorização.
+
+---
+
+### 🧱 Cenário A — Falha na Autenticação (`401 Unauthorized`)
+
+| Teste | Objetivo | Resultado | Evidência                              |
+|--------|-----------|------------|----------------------------------------|
+| **Credenciais Ausentes** | Validar a *Segurança por Padrão* — acesso sem autenticação. | `401 Unauthorized` por falta de credenciais. | `prints/nao_authorizado.png`             |
+| **Credenciais Inválidas** | Validar o funcionamento do HTTP Basic. | `401 Unauthorized` devido à senha incorreta. | `prints/password_basic_auth_invalida.png` |
+
+📘 **Conclusão:**  
+O sistema exige autenticação válida para qualquer acesso, confirmando a aplicação correta de `anyRequest().authenticated()`.
+
+---
+
+### ✅ Cenário B — Sucesso na Autorização (`200 OK` / `204 No Content`)
+
+| Teste | Usuário | Requisição | Resultado | Evidência                               |
+|--------|----------|-------------|-------------|-----------------------------------------|
+| **Leitura de Usuários** | `admin/admin123` | `GET /api/usuarios` | `200 OK` — Dados retornados com sucesso. | `prints/authorizado.png`                  |
+| **Exclusão de Conta** | `admin/admin123` | `DELETE /api/contas/1` | `204 No Content` — Exclusão bem-sucedida. | `prints/admin_pode_excluir_registros.png` |
+
+📘 **Conclusão:**  
+O usuário **ADMIN** possui permissão total sobre os recursos, conforme regra `hasRole("ADMIN")`.
+
+---
+
+### 🚫 Cenário C — Falha na Autorização (`403 Forbidden`)
+
+| Teste | Usuário | Requisição | Resultado | Evidência                                  |
+|--------|----------|-------------|-------------|--------------------------------------------|
+| **Tentativa de Exclusão de Conta** | `user/user123` | `DELETE /api/contas/1` | `403 Forbidden` — Operação não permitida. | `prints/user_nao_pode_excluir_registros.png` |
+
+📘 **Conclusão:**  
+O usuário **USER** foi autenticado com sucesso, mas suas **roles não permitem** a operação de exclusão.  
+Isso valida o **Princípio do Menor Privilégio**, garantindo que apenas usuários com a role `ADMIN` possam realizar ações destrutivas.
+
+---
+
+## 4. 🧾 Conclusão Geral
+
+- O sistema foi protegido com autenticação **HTTP Basic**, simples e eficaz para APIs RESTful.
+- As **roles ADMIN e USER** foram corretamente segregadas e aplicadas via *URL Matching*.
+- O **princípio da Segurança por Padrão** foi respeitado — todas as requisições exigem autenticação.
+- O projeto mantém **separação de responsabilidades** entre controladores, serviços e configuração de segurança.
+- Todos os testes práticos (Postman e cURL) comprovaram o funcionamento da camada de segurança implementada.
+
+---
 
 
-## Subinndo a aplicação
-#### No diretório raiz do projeto abra o terminal e rode o comando abaixo:
-- `mvn clean install`
+## ⚙️ 4. Como Executar a Aplicação
 
-#### para startar apenas va até o diretoriro do projeto(main-application)
-- `cd main-application`
-#### rode o comando abaixo:
-- `mvn spring-boot:run`
+1. **No terminal, Compile e instale os módulos**:
+   ```bash
+   mvn clean install
+   
+2. **acesse o diretorio**:
+    ```bash
+    cd main-application
+
+3. **rode o comando**:
+    ```bash
+    mvn spring-boot:run
+
+## ⚙️ Testar os Endpoins
+-Na raiz do projeto tem uma collection **sergio-antonio-api.postman_collection.json**, importe no postman/insomnia
 

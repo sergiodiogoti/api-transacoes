@@ -1,0 +1,494 @@
+{
+	"info": {
+		"_postman_id": "8b8fde21-f544-4f7d-be6f-a03c9766607f",
+		"name": "sergio-antonio-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19994861"
+	},
+	"item": [
+		{
+			"name": "usuario",
+			"item": [
+				{
+					"name": "obterPorId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obterPorCPF",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios/cpf/123.567.891-01",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios",
+								"cpf",
+								"123.567.891-01"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obterPorPerfil",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios/perfil/free",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios",
+								"perfil",
+								"free"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obterPorRenda",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios/renda?min=7700&max=10000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios",
+								"renda"
+							],
+							"query": [
+								{
+									"key": "min",
+									"value": "7700"
+								},
+								{
+									"key": "max",
+									"value": "10000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obterLista",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "user123",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "incluir",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Maria Fernanda Costa\",\r\n    \"email\": \"maria.fernanda@gmail.com\",\r\n    \"cpf\": \"123.567.891-01\",\r\n    \"telefone\": \"(11)98888-7777\",\r\n    \"pontuacaoCredito\": 720,\r\n    \"rendaMensal\": 5500.0,\r\n    \"perfil\": \"Free\",\r\n    \"ativo\": true,\r\n    \"endereco\": {\r\n        \"cep\": \"17012-574\",\r\n        \"logradouro\": \"Rua Inigo Martinez- 908\",\r\n        \"bairro\": \"Vila Isabel\",\r\n        \"localidade\": \"Marilia\",\r\n        \"uf\": \"SP\",\r\n        \"estado\": \"São Paulo\"\r\n    }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alterar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Maria Fernanda Costa\",\r\n    \"email\": \"maria.fernanda@gmail.com\",\r\n    \"cpf\": \"987.654.321-00\",\r\n    \"telefone\": \"(11)98888-7777\",\r\n    \"pontuacaoCredito\": 720,\r\n    \"rendaMensal\": 10000.90,\r\n    \"perfil\": \"Free\",\r\n    \"ativo\": true,\r\n    \"endereco\": {\r\n        \"id\": 4,\r\n        \"cep\": \"17012-574\",\r\n        \"logradouro\": \"Rua Inigo Martinez- 908\",\r\n        \"complemento\": null,\r\n        \"unidade\": null,\r\n        \"bairro\": \"Vila Isabel\",\r\n        \"localidade\": \"Marilia\",\r\n        \"uf\": \"SP\",\r\n        \"estado\": \"São Paulo\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "excluir",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "inativar",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/usuarios/1/inativar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"usuarios",
+								"1",
+								"inativar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "conta",
+			"item": [
+				{
+					"name": "obterPorId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/contas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"contas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obterPorCpfETipo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/contas/cpf/123.567.891-01/tipo/POUPANCA",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"contas",
+								"cpf",
+								"123.567.891-01",
+								"tipo",
+								"POUPANCA"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obterPorSaldoMaiorQue",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/contas/cpf/123.567.891-01/saldo-maior/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"contas",
+								"cpf",
+								"123.567.891-01",
+								"saldo-maior",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obterLista",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/contas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"contas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "incluir",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Conta Corrente Pctual\",\r\n    \"tipo\": \"CORRENTE\",\r\n    \"instituicao\": \"SANTANDER\",\r\n    \"saldo\": 15500.0,\r\n    \"principal\": false,\r\n    \"usuario\": {\r\n        \"id\": 1,\r\n        \"nome\": \"Sergio Diogo Antonio\",\r\n        \"email\": \"sergio@gmail.com\",\r\n        \"cpf\": \"123.567.891-01\",\r\n        \"telefone\": \"(14)99609038\",\r\n        \"pontuacaoCredito\": 80,\r\n        \"rendaMensal\": 2000.0,\r\n        \"perfil\": \"Free\",\r\n        \"ativo\": true,\r\n        \"endereco\": {\r\n            \"id\": 1,\r\n            \"cep\": \"17013-105\",\r\n            \"logradouro\": \"Rua Antonio Machado - 890\",\r\n            \"bairro\": \"Vila Airton Cena\",\r\n            \"localidade\": \"São Paulo\",\r\n            \"uf\": \"SP\",\r\n            \"estado\": \"São Paulo\"\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/contas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"contas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alterar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Conta Corrente TESTE\",\r\n    \"tipo\": \"CORRENTE\",\r\n    \"instituicao\": \"SANTANDER\",\r\n    \"saldo\": 15500.0,\r\n    \"principal\": false,\r\n    \"usuario\": {\r\n        \"id\": 1,\r\n        \"nome\": \"Sergio Diogo Antonio\",\r\n        \"email\": \"sergio@gmail.com\",\r\n        \"cpf\": \"123.567.891-01\",\r\n        \"telefone\": \"(14)99609038\",\r\n        \"pontuacaoCredito\": 80,\r\n        \"rendaMensal\": 2000.0,\r\n        \"perfil\": \"Free\",\r\n        \"ativo\": true,\r\n        \"endereco\": {\r\n            \"id\": 1,\r\n            \"cep\": \"17013-105\",\r\n            \"logradouro\": \"Rua Antonio Machado - 890\",\r\n            \"bairro\": \"Vila Airton Cena\",\r\n            \"localidade\": \"São Paulo\",\r\n            \"uf\": \"SP\",\r\n            \"estado\": \"São Paulo\"\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/contas/13",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"contas",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "excluir",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Vinicius Cesar Vianna\",\r\n    \"email\": \"viniciuscesar@vianna.com\",\r\n    \"telefone\": \"3434343434\",\r\n    \"matricula\": 9987,\r\n    \"salario\": 1001.0,\r\n    \"ehAtivo\": true,\r\n    \"endereco\": {\r\n        \"cep\": \"22233334\",\r\n        \"localidade\": \"São Paulo\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/contas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"contas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "principal",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/contas/0/principal",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"contas",
+								"0",
+								"principal"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
